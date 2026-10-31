@@ -12,8 +12,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(length = 254, nullable = false)
     private String name;
+
+    @Column(length = 254, nullable = false)
     private String email;
+
     private String phone;
 
     @OneToMany(mappedBy = "user")
