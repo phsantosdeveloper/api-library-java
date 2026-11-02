@@ -10,7 +10,7 @@ import com.phdev.library.entities.enums.LoanStatus;
 import com.phdev.library.repositories.BookRepository;
 import com.phdev.library.repositories.LoanRepository;
 import com.phdev.library.repositories.UserRepository;
-import com.phdev.library.services.exceptions.ResourceNotFoundException;
+import com.phdev.library.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

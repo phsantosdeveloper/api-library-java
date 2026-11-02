@@ -4,7 +4,7 @@ import com.phdev.library.dto.UserResponse;
 import com.phdev.library.dto.UserRequest;
 import com.phdev.library.entities.User;
 import com.phdev.library.repositories.UserRepository;
-import com.phdev.library.services.exceptions.ResourceNotFoundException;
+import com.phdev.library.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

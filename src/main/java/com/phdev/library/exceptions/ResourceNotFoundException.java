@@ -1,4 +1,4 @@
-package com.phdev.library.services.exceptions;
+package com.phdev.library.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(Object id) {

@@ -4,7 +4,7 @@ import com.phdev.library.dto.CategoryRequest;
 import com.phdev.library.dto.CategoryResponse;
 import com.phdev.library.entities.Category;
 import com.phdev.library.repositories.CategoryRepository;
-import com.phdev.library.services.exceptions.ResourceNotFoundException;
+import com.phdev.library.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
