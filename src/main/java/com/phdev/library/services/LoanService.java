@@ -49,8 +49,8 @@ public class LoanService {
         LocalDateTime loanDate = LocalDateTime.now();
         LocalDate returnExpectedDate = loanDate.toLocalDate().plusDays(30);
 
-        User user = findByUserId(request.UserId());
-        Book book = findByBookId(request.BookId());
+        User user = findByUserId(request.userId());
+        Book book = findByBookId(request.bookId());
 
         validateAvailableQuantityOfBooks(book);
 
