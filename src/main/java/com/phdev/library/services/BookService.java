@@ -7,6 +7,7 @@ import com.phdev.library.dto.BookUpdate;
 import com.phdev.library.entities.Author;
 import com.phdev.library.entities.Book;
 import com.phdev.library.entities.Category;
+import com.phdev.library.exceptions.InvalidNumberBooksWithdrawException;
 import com.phdev.library.repositories.AuthorRepository;
 import com.phdev.library.repositories.BookRepository;
 import com.phdev.library.repositories.CategoryRepository;
@@ -46,8 +47,8 @@ public class BookService {
         Category category = findByCategoryId(request.categoryId());
         Author author = findByAuthorId(request.authorId());
 
-        Book book = new Book(null, request.title(), request.isbn(), request.publicationYear(), request.availableQuantity(),
-                category, author);
+        Book book = new Book(null, request.title(), request.isbn(), request.publicationYear(),
+                request.availableQuantity(), category, author);
 
         bookRepository.save(book);
 
@@ -79,7 +80,8 @@ public class BookService {
         Book book = findByBookId(id);
 
         if(request.quantity() > book.getAvailableQuantity()) {
-            throw new RuntimeException();
+            throw new InvalidNumberBooksWithdrawException("The number of books to be " +
+                    "checked out must not exceed the number available");
         }
 
         book.setAvailableQuantity(book.getAvailableQuantity() - request.quantity());

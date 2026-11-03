@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.ISBN;
 public record BookRequest(
 
         @NotBlank(message = "Title is required")
-        @Size(message = "The title must be between 3 and 254 characters long")
+        @Size(min = 3, max = 254, message = "The title must be between 3 and 254 characters long")
         String title,
 
         @NotBlank(message = "ISBN is required")

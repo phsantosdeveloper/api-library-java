@@ -7,6 +7,8 @@ import com.phdev.library.entities.Book;
 import com.phdev.library.entities.Loan;
 import com.phdev.library.entities.User;
 import com.phdev.library.entities.enums.LoanStatus;
+import com.phdev.library.exceptions.BookUnavailableException;
+import com.phdev.library.exceptions.LoanNotActiveException;
 import com.phdev.library.repositories.BookRepository;
 import com.phdev.library.repositories.LoanRepository;
 import com.phdev.library.repositories.UserRepository;
@@ -65,7 +67,7 @@ public class LoanService {
     public LoanResponse updateReturnExpectedDate(Long id, LoanUpdate update) {
         Loan loan = findByLoanId(id);
 
-        validateReturnandLoanStatus(loan);
+        validateLoanIsActive(loan);
 
         loan.setReturnExpectedDate(update.returnExpectedDate());
         loanRepository.save(loan);
@@ -76,7 +78,7 @@ public class LoanService {
     public LoanResponse confirmReturn(Long id) {
         Loan loan = findByLoanId(id);
 
-        validateReturnandLoanStatus(loan);
+        validateLoanIsActive(loan);
 
         loan.setReturnDate(LocalDateTime.now());
         loan.setStatus(LoanStatus.RETURNED);
@@ -90,7 +92,7 @@ public class LoanService {
     public LoanResponse cancel(Long id) {
         Loan loan = findByLoanId(id);
 
-        validateReturnandLoanStatus(loan);
+        validateLoanIsActive(loan);
 
         loan.setStatus(LoanStatus.CANCELLED);
         returnBookToStock(loan.getBook());
@@ -120,16 +122,16 @@ public class LoanService {
         return book;
     }
 
-    private void validateReturnandLoanStatus(Loan loan) {
+    private void validateLoanIsActive(Loan loan) {
         if(loan.getReturnDate() != null || loan.getStatus().equals(LoanStatus.RETURNED)
                 || loan.getStatus().equals(LoanStatus.CANCELLED)) {
-            throw new RuntimeException();
+            throw new LoanNotActiveException("This operation is not permitted for a returned or cancelled loan");
         }
     }
 
     private void validateAvailableQuantityOfBooks(Book book) {
         if(book.getAvailableQuantity() <= 0) {
-            throw new RuntimeException();
+            throw new BookUnavailableException("Number of books unavailable for this operation");
         }
     }
 
