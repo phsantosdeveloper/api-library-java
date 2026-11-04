@@ -34,6 +34,12 @@ public class CategoryController {
         return ResponseEntity.ok().body(categoryResponse);
     }
 
+    @GetMapping(params = "name")
+    public ResponseEntity<Page<CategoryResponse>> findByName(Pageable pageable, @RequestParam(name = "name") String name) {
+        Page<CategoryResponse> categoryResponses =  categoryService.findByName(pageable, name);
+        return ResponseEntity.ok().body(categoryResponses);
+    }
+
     @PostMapping
     public ResponseEntity<CategoryResponse> insert(@Valid @RequestBody CategoryRequest request) {
         CategoryResponse categoryResponse = categoryService.insert(request);

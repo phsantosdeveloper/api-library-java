@@ -31,6 +31,12 @@ public class CategoryService {
         return new CategoryResponse(category);
     }
 
+    @Transactional(readOnly = true)
+    public Page<CategoryResponse> findByName(Pageable pageable, String name) {
+        Page<Category> categories = categoryRepository.findByNameContainingIgnoreCase(pageable, name);
+        return categories.map(category -> new CategoryResponse(category));
+    }
+
     @Transactional
     public CategoryResponse insert(CategoryRequest request) {
         Category category = new Category(null, request.name());
