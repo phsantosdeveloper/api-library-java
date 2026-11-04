@@ -31,6 +31,12 @@ public class AuthorService {
         return new AuthorResponse(author);
     }
 
+    @Transactional(readOnly = true)
+    public Page<AuthorResponse> findByName(Pageable pageable, String name) {
+        Page<Author> authors = authorRepository.findByNameContainingIgnoreCase(pageable, name);
+        return authors.map(author -> new AuthorResponse(author));
+    }
+
     @Transactional
     public AuthorResponse insert(AuthorRequest request) {
         Author author = new Author(null, request.name());
