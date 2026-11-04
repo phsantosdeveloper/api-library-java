@@ -31,6 +31,23 @@ public class UserService {
         return new UserResponse(user);
     }
 
+    @Transactional(readOnly = true)
+    public Page<UserResponse> findByName(String name, Pageable pageable) {
+        Page<User> users = userRepository.findByNameContainingIgnoreCase(name, pageable);
+        return users.map(user -> new UserResponse(user));
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse findByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if(user == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        return new UserResponse(user);
+    }
+
     @Transactional
     public UserResponse insert(UserRequest request) {
         User user = new User(null, request.name(), request.email(), request.phone());

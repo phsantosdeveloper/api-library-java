@@ -35,8 +35,8 @@ public class AuthorController {
     }
 
     @GetMapping(params = "name")
-    public ResponseEntity<Page<AuthorResponse>> findByName(Pageable pageable, @RequestParam(name = "name") String name) {
-        Page<AuthorResponse> authorResponses = authorService.findByName(pageable, name);
+    public ResponseEntity<Page<AuthorResponse>> findByName(@RequestParam(name = "name") String name, Pageable pageable) {
+        Page<AuthorResponse> authorResponses = authorService.findByName(name, pageable);
         return ResponseEntity.ok().body(authorResponses);
     }
 

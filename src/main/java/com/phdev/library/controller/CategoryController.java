@@ -35,8 +35,8 @@ public class CategoryController {
     }
 
     @GetMapping(params = "name")
-    public ResponseEntity<Page<CategoryResponse>> findByName(Pageable pageable, @RequestParam(name = "name") String name) {
-        Page<CategoryResponse> categoryResponses =  categoryService.findByName(pageable, name);
+    public ResponseEntity<Page<CategoryResponse>> findByName(@RequestParam(name = "name") String name, Pageable pageable) {
+        Page<CategoryResponse> categoryResponses =  categoryService.findByName(name, pageable);
         return ResponseEntity.ok().body(categoryResponses);
     }
 

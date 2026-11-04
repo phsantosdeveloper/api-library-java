@@ -34,6 +34,18 @@ public class UserController {
         return ResponseEntity.ok().body(userResponse);
     }
 
+    @GetMapping(params = "name")
+    public ResponseEntity<Page<UserResponse>> findByName( @RequestParam(name = "name") String name, Pageable pageable) {
+        Page<UserResponse> userResponses = userService.findByName(name, pageable);
+        return ResponseEntity.ok().body(userResponses);
+    }
+
+    @GetMapping(params = "email")
+    public ResponseEntity<UserResponse> findByEmail(@RequestParam(name = "email") String email) {
+        UserResponse userResponse = userService.findByEmail(email);
+        return ResponseEntity.ok().body(userResponse);
+    }
+
     @PostMapping
     public ResponseEntity<UserResponse> insert(@Valid @RequestBody UserRequest request) {
         UserResponse userResponse = userService.insert(request);
