@@ -66,6 +66,20 @@ public class BookService {
         return books.map(book -> new BookResponse(book));
     }
 
+    @Transactional(readOnly = true)
+    public BookResponse findByIsbn(String isbn) {
+        Book book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+
+        return new BookResponse(book);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BookResponse> findAvailableBooks(Pageable pageable) {
+        Page<Book> books = bookRepository.findAvailableBooks(pageable);
+        return books.map(book -> new BookResponse(book));
+    }
+
     @Transactional
     public BookResponse insert(BookRequest request) {
         Category category = getCategoryOrThrow(request.categoryId());

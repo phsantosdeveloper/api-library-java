@@ -60,6 +60,18 @@ public class BookController {
         return ResponseEntity.ok().body(bookResponses);
     }
 
+    @GetMapping(params = "isbn")
+    public ResponseEntity<BookResponse> findByIsbn(@RequestParam(name = "isbn") String isbn) {
+        BookResponse bookResponse = bookService.findByIsbn(isbn);
+        return ResponseEntity.ok().body(bookResponse);
+    }
+
+    @GetMapping(value = "/available")
+    public ResponseEntity<Page<BookResponse>> findAvailableBooks(Pageable pageable) {
+        Page<BookResponse> bookResponses = bookService.findAvailableBooks(pageable);
+        return ResponseEntity.ok().body(bookResponses);
+    }
+
     @PostMapping
     public ResponseEntity<BookResponse> insert(@Valid @RequestBody BookRequest request) {
         BookResponse bookResponse = bookService.insert(request);
