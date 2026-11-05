@@ -36,6 +36,18 @@ public class BookController {
         return ResponseEntity.ok().body(bookResponse);
     }
 
+    @GetMapping(params = "authorId")
+    public ResponseEntity<Page<BookResponse>> findByAuthorId(@RequestParam(name = "authorId") Long authorId, Pageable pageable) {
+        Page<BookResponse> bookResponses = bookService.findByAuthorId(authorId, pageable);
+        return ResponseEntity.ok().body(bookResponses);
+    }
+
+    @GetMapping(params = "authorName")
+    public ResponseEntity<Page<BookResponse>> findByAuthorName(@RequestParam(name = "authorName") String name, Pageable pageable) {
+        Page<BookResponse> bookResponses = bookService.findByAuthorName(name, pageable);
+        return ResponseEntity.ok().body(bookResponses);
+    }
+
     @PostMapping
     public ResponseEntity<BookResponse> insert(@Valid @RequestBody BookRequest request) {
         BookResponse bookResponse = bookService.insert(request);

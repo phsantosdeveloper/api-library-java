@@ -42,10 +42,22 @@ public class BookService {
         return new BookResponse(book);
     }
 
+    @Transactional(readOnly = true)
+    public Page<BookResponse> findByAuthorId(Long id, Pageable pageable) {
+        Page<Book> books = bookRepository.findByAuthorId(id, pageable);
+        return books.map(book -> new BookResponse(book));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BookResponse> findByAuthorName(String name, Pageable pageable) {
+        Page<Book> books = bookRepository.findByAuthorNameContainingIgnoreCase(name, pageable);
+        return books.map(book -> new BookResponse(book));
+    }
+
     @Transactional
     public BookResponse insert(BookRequest request) {
         Category category = findByCategoryId(request.categoryId());
-        Author author = findByAuthorId(request.authorId());
+        Author author = getAuthorOrThrow(request.authorId());
 
         Book book = new Book(null, request.title(), request.isbn(), request.publicationYear(),
                 request.availableQuantity(), category, author);
@@ -59,7 +71,7 @@ public class BookService {
     public BookResponse update(Long id, BookUpdate update) {
         Book book = findByBookId(id);
         Category category = findByCategoryId(update.categoryId());
-        Author author = findByAuthorId(update.authorId());
+        Author author = getAuthorOrThrow(update.authorId());
         updateBookData(book, update, category, author);
 
         bookRepository.save(book);
@@ -118,7 +130,7 @@ public class BookService {
         return category;
     }
 
-    private Author findByAuthorId(Long id) {
+    private Author getAuthorOrThrow(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
