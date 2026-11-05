@@ -43,6 +43,12 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
+    public Page<BookResponse> findByTitle(String title, Pageable pageable) {
+        Page<Book> books = bookRepository.findByTitleContainingIgnoreCase(title, pageable);
+        return books.map(book -> new BookResponse(book));
+    }
+
+    @Transactional(readOnly = true)
     public Page<BookResponse> findByAuthorId(Long id, Pageable pageable) {
         Page<Book> books = bookRepository.findByAuthorId(id, pageable);
         return books.map(book -> new BookResponse(book));
@@ -54,23 +60,28 @@ public class BookService {
         return books.map(book -> new BookResponse(book));
     }
 
+    @Transactional(readOnly = true)
+    public Page<BookResponse> findByCategoryId(Long id, Pageable pageable) {
+        Page<Book> books = bookRepository.findByCategoryId(id, pageable);
+        return books.map(book -> new BookResponse(book));
+    }
+
     @Transactional
     public BookResponse insert(BookRequest request) {
-        Category category = findByCategoryId(request.categoryId());
+        Category category = getCategoryOrThrow(request.categoryId());
         Author author = getAuthorOrThrow(request.authorId());
 
         Book book = new Book(null, request.title(), request.isbn(), request.publicationYear(),
                 request.availableQuantity(), category, author);
 
         bookRepository.save(book);
-
         return new BookResponse(book);
     }
 
     @Transactional
     public BookResponse update(Long id, BookUpdate update) {
         Book book = findByBookId(id);
-        Category category = findByCategoryId(update.categoryId());
+        Category category = getCategoryOrThrow(update.categoryId());
         Author author = getAuthorOrThrow(update.authorId());
         updateBookData(book, update, category, author);
 
@@ -123,7 +134,7 @@ public class BookService {
         return book;
     }
 
-    private Category findByCategoryId(Long id) {
+    private Category getCategoryOrThrow(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 

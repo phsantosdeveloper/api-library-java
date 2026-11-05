@@ -36,6 +36,12 @@ public class BookController {
         return ResponseEntity.ok().body(bookResponse);
     }
 
+    @GetMapping(params = "title")
+    public ResponseEntity<Page<BookResponse>> findByTitle(@RequestParam(name = "title") String title, Pageable pageable) {
+        Page<BookResponse> bookResponses = bookService.findByTitle(title, pageable);
+        return ResponseEntity.ok().body(bookResponses);
+    }
+
     @GetMapping(params = "authorId")
     public ResponseEntity<Page<BookResponse>> findByAuthorId(@RequestParam(name = "authorId") Long authorId, Pageable pageable) {
         Page<BookResponse> bookResponses = bookService.findByAuthorId(authorId, pageable);
@@ -45,6 +51,12 @@ public class BookController {
     @GetMapping(params = "authorName")
     public ResponseEntity<Page<BookResponse>> findByAuthorName(@RequestParam(name = "authorName") String name, Pageable pageable) {
         Page<BookResponse> bookResponses = bookService.findByAuthorName(name, pageable);
+        return ResponseEntity.ok().body(bookResponses);
+    }
+
+    @GetMapping(params = "categoryId")
+    public ResponseEntity<Page<BookResponse>> findByCategoryId(@RequestParam(name = "categoryId") Long categoryId, Pageable pageable) {
+        Page<BookResponse> bookResponses = bookService.findByCategoryId(categoryId, pageable);
         return ResponseEntity.ok().body(bookResponses);
     }
 
