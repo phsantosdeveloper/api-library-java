@@ -1,6 +1,7 @@
 package com.phdev.library.services;
 
 import com.phdev.library.dto.BookAvailableQuantityRequest;
+import com.phdev.library.dto.BookFilter;
 import com.phdev.library.dto.BookRequest;
 import com.phdev.library.dto.BookResponse;
 import com.phdev.library.dto.BookUpdate;
@@ -10,6 +11,7 @@ import com.phdev.library.entities.Category;
 import com.phdev.library.exceptions.InvalidNumberBooksWithdrawException;
 import com.phdev.library.repositories.AuthorRepository;
 import com.phdev.library.repositories.BookRepository;
+import com.phdev.library.specifications.BookSpecifications;
 import com.phdev.library.repositories.CategoryRepository;
 import com.phdev.library.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
@@ -31,9 +33,9 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BookResponse> findAll(Pageable pageable) {
-        Page<Book> books = bookRepository.findAll(pageable);
-        return books.map(book -> new BookResponse(book));
+    public Page<BookResponse> search(BookFilter filter, Pageable pageable) {
+        return bookRepository.findAll(BookSpecifications.withFilters(filter), pageable)
+                .map(BookResponse::new);
     }
 
     @Transactional(readOnly = true)
@@ -43,41 +45,9 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BookResponse> findByTitle(String title, Pageable pageable) {
-        Page<Book> books = bookRepository.findByTitleContainingIgnoreCase(title, pageable);
-        return books.map(book -> new BookResponse(book));
-    }
-
-    @Transactional(readOnly = true)
-    public Page<BookResponse> findByAuthorId(Long id, Pageable pageable) {
-        Page<Book> books = bookRepository.findByAuthorId(id, pageable);
-        return books.map(book -> new BookResponse(book));
-    }
-
-    @Transactional(readOnly = true)
-    public Page<BookResponse> findByAuthorName(String name, Pageable pageable) {
-        Page<Book> books = bookRepository.findByAuthorNameContainingIgnoreCase(name, pageable);
-        return books.map(book -> new BookResponse(book));
-    }
-
-    @Transactional(readOnly = true)
-    public Page<BookResponse> findByCategoryId(Long id, Pageable pageable) {
-        Page<Book> books = bookRepository.findByCategoryId(id, pageable);
-        return books.map(book -> new BookResponse(book));
-    }
-
-    @Transactional(readOnly = true)
-    public BookResponse findByIsbn(String isbn) {
-        Book book = bookRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-
-        return new BookResponse(book);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<BookResponse> findAvailableBooks(Pageable pageable) {
-        Page<Book> books = bookRepository.findAvailableBooks(pageable);
-        return books.map(book -> new BookResponse(book));
+    public Page<BookResponse> findAvailableBooks(BookFilter filter, Pageable pageable) {
+        return bookRepository.findAll(BookSpecifications.withFilters(filter).and(BookSpecifications.available()), pageable)
+                .map(BookResponse::new);
     }
 
     @Transactional

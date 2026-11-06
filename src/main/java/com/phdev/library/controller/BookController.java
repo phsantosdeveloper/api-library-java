@@ -1,6 +1,7 @@
 package com.phdev.library.controller;
 
 import com.phdev.library.dto.BookAvailableQuantityRequest;
+import com.phdev.library.dto.BookFilter;
 import com.phdev.library.dto.BookRequest;
 import com.phdev.library.dto.BookResponse;
 import com.phdev.library.dto.BookUpdate;
@@ -25,9 +26,8 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<BookResponse>> findAll(Pageable pageable) {
-        Page<BookResponse> bookResponses = bookService.findAll(pageable);
-        return ResponseEntity.ok().body(bookResponses);
+    public ResponseEntity<Page<BookResponse>> search(@Valid @ModelAttribute BookFilter filter, Pageable pageable) {
+        return ResponseEntity.ok(bookService.search(filter, pageable));
     }
 
     @GetMapping(value = "/{id}")
@@ -36,40 +36,10 @@ public class BookController {
         return ResponseEntity.ok().body(bookResponse);
     }
 
-    @GetMapping(params = "title")
-    public ResponseEntity<Page<BookResponse>> findByTitle(@RequestParam(name = "title") String title, Pageable pageable) {
-        Page<BookResponse> bookResponses = bookService.findByTitle(title, pageable);
-        return ResponseEntity.ok().body(bookResponses);
-    }
-
-    @GetMapping(params = "authorId")
-    public ResponseEntity<Page<BookResponse>> findByAuthorId(@RequestParam(name = "authorId") Long authorId, Pageable pageable) {
-        Page<BookResponse> bookResponses = bookService.findByAuthorId(authorId, pageable);
-        return ResponseEntity.ok().body(bookResponses);
-    }
-
-    @GetMapping(params = "authorName")
-    public ResponseEntity<Page<BookResponse>> findByAuthorName(@RequestParam(name = "authorName") String name, Pageable pageable) {
-        Page<BookResponse> bookResponses = bookService.findByAuthorName(name, pageable);
-        return ResponseEntity.ok().body(bookResponses);
-    }
-
-    @GetMapping(params = "categoryId")
-    public ResponseEntity<Page<BookResponse>> findByCategoryId(@RequestParam(name = "categoryId") Long categoryId, Pageable pageable) {
-        Page<BookResponse> bookResponses = bookService.findByCategoryId(categoryId, pageable);
-        return ResponseEntity.ok().body(bookResponses);
-    }
-
-    @GetMapping(params = "isbn")
-    public ResponseEntity<BookResponse> findByIsbn(@RequestParam(name = "isbn") String isbn) {
-        BookResponse bookResponse = bookService.findByIsbn(isbn);
-        return ResponseEntity.ok().body(bookResponse);
-    }
-
     @GetMapping(value = "/available")
-    public ResponseEntity<Page<BookResponse>> findAvailableBooks(Pageable pageable) {
-        Page<BookResponse> bookResponses = bookService.findAvailableBooks(pageable);
-        return ResponseEntity.ok().body(bookResponses);
+    public ResponseEntity<Page<BookResponse>> findAvailableBooks(@Valid @ModelAttribute BookFilter filter,
+                                                                Pageable pageable) {
+        return ResponseEntity.ok(bookService.findAvailableBooks(filter, pageable));
     }
 
     @PostMapping

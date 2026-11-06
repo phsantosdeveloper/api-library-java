@@ -8,8 +8,8 @@ public record BookResponse(
         String isbn,
         Integer publicationYear,
         Integer availableQuantity,
-        Long CategoryId,
-        Long AuthorId
+        Long categoryId,
+        Long authorId
 ) {
 
     public BookResponse(Book book) {
