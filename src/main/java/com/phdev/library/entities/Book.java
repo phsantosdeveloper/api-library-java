@@ -12,11 +12,21 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version
+    @Column(nullable = false)
+    private long version;
+
+    @Column(nullable = false)
     private String title;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String isbn;
+
+    @Column(nullable = false)
     private Integer publicationYear;
+
+    @Column(nullable = false)
     private Integer availableQuantity;
 
     @ManyToOne(optional = false)

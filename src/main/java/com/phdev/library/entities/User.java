@@ -19,6 +19,7 @@ public class User {
     @Column(length = 254, nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String phone;
 
     @OneToMany(mappedBy = "user")

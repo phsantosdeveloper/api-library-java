@@ -13,10 +13,20 @@ public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version
+    @Column(nullable = false)
+    private long version;
+
+    @Column(nullable = false)
     private LocalDateTime loanDate;
+
+    @Column(nullable = false)
     private LocalDate returnExpectedDate;
+
     private LocalDateTime returnDate;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private LoanStatus status;
 

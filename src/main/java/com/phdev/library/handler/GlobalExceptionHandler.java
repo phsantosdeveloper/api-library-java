@@ -6,6 +6,7 @@ import com.phdev.library.exceptions.LoanNotActiveException;
 import com.phdev.library.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -17,6 +18,18 @@ import java.time.Instant;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ResponseEntity<StandardError> optimisticLocking(OptimisticLockingFailureException e, HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.CONFLICT;
+        String error = "Concurrent update";
+        String message = "The record was changed by another operation. Reload and try again.";
+
+        StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
+
+        return ResponseEntity.status(status).body(err);
+    }
 
     @ExceptionHandler(BookUnavailableException.class)
     public ResponseEntity<StandardError> bookUnavailable(BookUnavailableException e, HttpServletRequest request) {
