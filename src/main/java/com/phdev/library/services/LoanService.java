@@ -46,6 +46,26 @@ public class LoanService {
         return new LoanResponse(loan);
     }
 
+    @Transactional(readOnly = true)
+    public Page<LoanResponse> findByBookId(Long id, Pageable pageable) {
+        Page<Loan> loans = loanRepository.findByBookId(id, pageable);
+        return loans.map(loan -> new LoanResponse(loan));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<LoanResponse> findByUserId(Long id, Pageable pageable) {
+        Page<Loan> loans = loanRepository.findByUserId(id, pageable);
+        return loans.map(loan -> new LoanResponse(loan));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<LoanResponse> findOverdue(Pageable pageable) {
+        LocalDate currentDate = LocalDate.now();
+        Page<Loan> loans = loanRepository.findByReturnExpectedDateIsBeforeAndStatus(currentDate, LoanStatus.ACTIVE, pageable);
+
+        return loans.map(loan -> new LoanResponse(loan));
+    }
+
     @Transactional
     public LoanResponse insert(LoanRequest request) {
         LocalDateTime loanDate = LocalDateTime.now();

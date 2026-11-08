@@ -35,6 +35,24 @@ public class LoanController {
         return ResponseEntity.ok().body(loanResponse);
     }
 
+    @GetMapping(value = "/user/{id}")
+    public ResponseEntity<Page<LoanResponse>> findByUserId(@PathVariable Long id, Pageable pageable) {
+        Page<LoanResponse> loanResponses = loanService.findByUserId(id, pageable);
+        return ResponseEntity.ok().body(loanResponses);
+    }
+
+    @GetMapping(value = "/book/{id}")
+    public ResponseEntity<Page<LoanResponse>> findByBookId(@PathVariable Long id, Pageable pageable) {
+        Page<LoanResponse> loanResponses = loanService.findByBookId(id, pageable);
+        return ResponseEntity.ok().body(loanResponses);
+    }
+
+    @GetMapping(value = "/overdue")
+    public ResponseEntity<Page<LoanResponse>> findOverdue(Pageable pageable) {
+        Page<LoanResponse> loanResponses = loanService.findOverdue(pageable);
+        return ResponseEntity.ok().body(loanResponses);
+    }
+
     @PostMapping
     public ResponseEntity<LoanResponse> insert(@Valid @RequestBody LoanRequest request) {
         LoanResponse loanResponse = loanService.insert(request);
